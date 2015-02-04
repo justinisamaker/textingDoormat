@@ -22,7 +22,7 @@ var client = new twilio.RestClient(
 var pressureSensor = new mraa.Aio(0);
 
 // Declare the buzzer
-var buzzer = new mraa.Gpio(2);
+var buzzer = new mraa.Gpio(6);
 buzzer.dir(mraa.DIR_OUT);
 
 console.log('MRAA Version: ' + mraa.getVersion());
@@ -34,12 +34,13 @@ function init(){
 function checkForGuest(){
 	var guestPresent = pressureSensor.read();
 
-	if(guestPresent){
+	if(guestPresent >= 400){
 		buzzer.write(1);
+		console.log(guestPresent);
 
 		client.sms.messages.create({
 			to:'[ INSERT TARGET PHONE NUMBER ]',
-			from:'+[INSERT TWILIO PHONE NUMBER]',
+			from:'+1[ INSERT TWILIO PHONE NUMBER ]',
 			body: 'Your guest has arrived!'
 		}, function(error, message){
 			if(!error){
@@ -49,8 +50,9 @@ function checkForGuest(){
 			}
 		});
 		setTimeout(function(){
+			buzzer.write(0);
 			setTimeout(checkForGuest, 100);
-		}, 2000);
+		}, 5000);
 	} else {
 	setTimeout(checkForGuest, 100);
 	}
