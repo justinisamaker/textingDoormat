@@ -1,0 +1,30 @@
+{
+  "name": "textingDoormat",
+  "description": "A doormat that texts you using the Intel Edison and Twilio",
+  "version": "0.0.1",
+  "keywords": [
+    "arduino",
+    "edison",
+    "intel",
+    "twilio",
+    "doorbell",
+    "iot",
+    "internetofthings"
+  ],
+  "maintainers": [
+    {
+      "name": "Justin Smith",
+      "email": "justin@isamaker.com",
+      "web": "isamaker.com"
+    }
+  ],
+  "dependencies": {
+    "forever": "*",
+    "request": "*",
+    "twilio": "*"
+  },
+  "repository": {
+  	"type":"git",
+  	"url":"https://github.com/justinisamaker/textingDoormat.git"
+  }
+}
