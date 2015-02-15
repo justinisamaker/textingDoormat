@@ -33,15 +33,15 @@ function init(){
 
 function checkForGuest(){
 	var guestPresent = pressureSensor.read();
-
+	console.log(guestPresent);
 	if(guestPresent >= 400){
 		buzzer.write(1);
-		console.log(guestPresent);
+		console.log('PRESENT: ' + guestPresent);
 
 		client.sms.messages.create({
 			to:'[ INSERT TARGET PHONE NUMBER ]',
 			from:'+1[ INSERT TWILIO PHONE NUMBER ]',
-			body: 'Your guest has arrived!'
+			body: 'Head\'s up, someone is outside'
 		}, function(error, message){
 			if(!error){
 				console.log(message);
