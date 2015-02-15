@@ -11,7 +11,7 @@ Listen for a pressure sensor to register over a certain number, then text me via
 var mraa = require('mraa');
 var request = require('request');
 
-//TWILIO
+// TWILIO
 var twilio = require('twilio');
 var client = new twilio.RestClient(
 	'[ INSERT TWILIO PUBLIC KEY ]',
@@ -25,19 +25,30 @@ var pressureSensor = new mraa.Aio(0);
 var buzzer = new mraa.Gpio(6);
 buzzer.dir(mraa.DIR_OUT);
 
+// Log the MRAA Version as a sanity check
 console.log('MRAA Version: ' + mraa.getVersion());
 
+// Set up the init
 function init(){
 	checkForGuest();
 }
 
 function checkForGuest(){
+	// Read the pressure sensor
 	var guestPresent = pressureSensor.read();
-	console.log(guestPresent);
+
+	// DEBUG SENSOR VALUE - UNCOMMENT THIS IF YOU NEED TO
+	// FIGURE OUT YOUR SENSOR RANGE
+	// console.log(guestPresent);
+
+	// Check if the value is higher than the threshold to trigger an input
 	if(guestPresent >= 400){
+		// Sound the buzzer
 		buzzer.write(1);
+		// Log the level that triggered an action
 		console.log('PRESENT: ' + guestPresent);
 
+		// Send the text message
 		client.sms.messages.create({
 			to:'[ INSERT TARGET PHONE NUMBER ]',
 			from:'+1[ INSERT TWILIO PHONE NUMBER ]',
@@ -49,13 +60,18 @@ function checkForGuest(){
 				console.log(error);
 			}
 		});
+
+		// Turn the buzzer off
+		buzzer.write(0);
+
+		// Wait for 10 seconds, then start listening again
 		setTimeout(function(){
-			buzzer.write(0);
 			setTimeout(checkForGuest, 100);
-		}, 5000);
+		}, 10000);
 	} else {
 	setTimeout(checkForGuest, 100);
 	}
 } // END CHECK BUTTON PRESSED
 
+// Init the code
 init();
